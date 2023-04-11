@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+   <body>
+
+      <h1>3DS Simple DDC Example</h1>
+      Instructions:
+      <ol>
+         <li>Initiate a 3DS SETUP request - to retieve a JWT accessToken from Smartpay Fuse</li>
+         <li>Note down the consumerAuthenticationInformation.referenceId object value (a GUID)</li>
+         <li>COPY the JWT returned from the 3DS SETUP step (from within the consumerAuthenticationInformation.accessToken object) and PASTE the JWT in to the form field value parameter below</li>
+         <li>Load this page in a web-browser (it will initiate the 3DS device data capture)</li>
+         <li>Open the console debug and note that the "Event Data" SessionId value matches the value of consumerAuthenticationInformation.referenceId from the initial SETUP request</li>
+      </ol>
+
+      <iframe id="cardinal_collection_iframe" name="collectionIframe" height="1" width="1" style="display: none;"></iframe>
+      
+      <form id="cardinal_collection_form" method="POST" target="collectionIframe"
+         action="https://centinelapistag.cardinalcommerce.com/V1/Cruise/Collect">
+         <input id="cardinal_collection_form_input" type="hidden" name="JWT" value="PASTE YOUR CAPTURE CONTEXT JWT HERE">
+      </form>
+
+   </body>
+
+   <script>
+      window.onload = function () {
+         var cardinalCollectionForm = document.querySelector('#cardinal_collection_form');
+         if (cardinalCollectionForm) // form exists
+            cardinalCollectionForm.submit();
+      }
+      window.addEventListener("message", function (event) {
+         if (event.origin === "https://centinelapistag.cardinalcommerce.com") {
+            console.log("Event Data = " + event.data);
+         }
+      }, false);
+
+   </script>
+</html>
